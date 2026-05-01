@@ -3,36 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>瞎七八换 · 不靠谱交换冒险</title>
+    <title>瞎七八换 · 情绪交换冒险</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: system-ui, 'Segoe UI', 'Poppins', 'Courier New', monospace;
         }
+
         body {
-            background: radial-gradient(circle at 10% 20%, #1a0b2e, #0a0410);
+            background: radial-gradient(circle at 20% 30%, #120a2a, #05020a);
+            font-family: 'Segoe UI', 'Poppins', 'Courier New', system-ui;
             min-height: 100vh;
             padding-bottom: 80px;
+            color: #f0d6ff;
         }
+
         /* 恶魔装饰 */
-        .devil-bg {
+        .demon-deco {
             position: fixed;
-            bottom: 10px;
-            left: 10px;
-            font-size: 70px;
+            bottom: 20px;
+            left: 20px;
+            font-size: 60px;
             opacity: 0.2;
             pointer-events: none;
             z-index: 0;
+            animation: float 6s infinite ease-in-out;
         }
-        .devil-bg-right {
+        .demon-deco-right {
             top: 20px;
             right: 20px;
             left: auto;
             bottom: auto;
             font-size: 50px;
         }
+        @keyframes float {
+            0%   { transform: translateY(0px); }
+            50%  { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
         /* 主容器 */
         .app {
             max-width: 1200px;
@@ -41,24 +51,30 @@
             position: relative;
             z-index: 10;
         }
+
         /* 头部 */
         .header {
             text-align: center;
             margin-bottom: 30px;
         }
         h1 {
-            font-size: 3rem;
+            font-size: 3.5rem;
             background: linear-gradient(135deg, #e9b3ff, #b45eff);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            letter-spacing: 4px;
+            letter-spacing: 6px;
+            font-family: '华文楷书', 'KaiTi', cursive;
+            margin-bottom: 8px;
         }
         .sub {
             color: #b77cff;
-            margin-top: 5px;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            font-style: italic;
         }
-        /* 卡片通用样式 */
+
+        /* 通用卡片 */
         .card {
             background: rgba(25, 15, 40, 0.75);
             backdrop-filter: blur(12px);
@@ -68,7 +84,8 @@
             margin-bottom: 24px;
             transition: 0.2s;
         }
-        /* 两个主入口 */
+
+        /* 两个主入口按钮 */
         .entry-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -103,40 +120,7 @@
             font-size: 0.8rem;
             margin-top: 8px;
         }
-        /* 快速盲盒输入框 */
-        .quick-blindbox {
-            background: rgba(0,0,0,0.4);
-            border-radius: 80px;
-            display: flex;
-            padding: 5px;
-            border: 1px solid #a855f7;
-        }
-        .quick-blindbox input {
-            flex: 1;
-            background: none;
-            border: none;
-            padding: 16px 24px;
-            color: white;
-            font-size: 1rem;
-            outline: none;
-        }
-        .quick-blindbox input::placeholder {
-            color: #8a6eb0;
-            font-style: italic;
-        }
-        .quick-blindbox button {
-            background: #7c3aed;
-            border: none;
-            border-radius: 60px;
-            padding: 0 28px;
-            font-weight: bold;
-            color: white;
-            cursor: pointer;
-            transition: 0.1s;
-        }
-        .quick-blindbox button:active {
-            transform: scale(0.97);
-        }
+
         /* 导航栏 */
         .nav {
             position: fixed;
@@ -164,36 +148,43 @@
             background: #7c3aed;
             color: white;
         }
-        /* 页面容器 */
+
+        /* 页面切换 */
         .page {
             display: none;
         }
         .page.active-page {
             display: block;
         }
+
         /* 大厅卡片 */
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
         .item-card {
-            background: rgba(30, 20, 45, 0.7);
+            background: rgba(30, 20, 45, 0.8);
             border-radius: 28px;
             padding: 16px;
-            margin-bottom: 16px;
-            display: flex;
-            gap: 16px;
-            flex-wrap: wrap;
             border-left: 4px solid #a855f7;
+            transition: 0.1s;
+        }
+        .item-card:hover {
+            transform: translateY(-3px);
+            background: #2f1f4a;
         }
         .item-img {
-            width: 80px;
-            height: 80px;
+            width: 100%;
+            height: 120px;
             background: #3a2a5a;
             border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 40px;
-        }
-        .item-info {
-            flex: 1;
+            font-size: 48px;
+            margin-bottom: 12px;
         }
         .item-title {
             font-size: 1.2rem;
@@ -203,26 +194,96 @@
         .item-desc {
             font-size: 0.8rem;
             color: #c9b0ff;
-            margin: 6px 0;
+            margin: 8px 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .item-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
         }
         .item-value {
-            display: inline-block;
             background: #7c3aed;
             border-radius: 40px;
             padding: 2px 12px;
             font-size: 0.7rem;
-            margin-top: 8px;
+            color: white;
+        }
+        .resonate-btn {
+            background: none;
+            border: none;
+            color: #ffb3ff;
+            cursor: pointer;
+            font-size: 0.8rem;
         }
         .exchange-btn {
             background: #b45eff;
             border: none;
             border-radius: 60px;
-            padding: 6px 18px;
+            padding: 4px 12px;
             color: #1f0a2e;
             font-weight: bold;
             cursor: pointer;
         }
-        /* 盲盒结果弹窗 */
+
+        /* 盲盒页面 */
+        .blind-input {
+            width: 100%;
+            padding: 14px;
+            border-radius: 60px;
+            background: #2a1b3a;
+            border: 1px solid #a855f7;
+            color: white;
+            margin-bottom: 16px;
+            font-size: 1rem;
+            outline: none;
+            font-family: inherit;
+        }
+        .blind-input:focus {
+            border-color: #d946ef;
+            box-shadow: 0 0 8px rgba(217, 70, 239, 0.4);
+        }
+        .score-slider {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 20px;
+            color: #e2b5ff;
+        }
+        .score-slider input[type="range"] {
+            flex: 1;
+        }
+        .open-btn {
+            background: linear-gradient(95deg, #7c3aed, #c026d3);
+            width: 100%;
+            padding: 14px;
+            border-radius: 60px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: none;
+            color: white;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .open-btn:hover {
+            filter: brightness(1.15);
+        }
+        .history-list {
+            margin-top: 20px;
+            border-top: 1px solid #4a2e6e;
+            padding-top: 16px;
+        }
+        .history-item {
+            border-bottom: 1px solid #4a2e6e;
+            padding: 8px 0;
+            font-size: 0.8rem;
+            color: #c9b0ff;
+        }
+
+        /* 弹窗 */
         .modal {
             position: fixed;
             top: 0;
@@ -237,7 +298,7 @@
             z-index: 200;
             visibility: hidden;
             opacity: 0;
-            transition: 0.2s;
+            transition: opacity 0.2s, visibility 0.2s;
         }
         .modal.show {
             visibility: visible;
@@ -279,44 +340,55 @@
             transition: 0.1s;
         }
         .modal-content button:hover {
-            background: #9b59ff;
+            filter: brightness(1.2);
         }
         .hidden-glow {
-            animation: glow 0.6s ease-out;
+            animation: glow 0.8s ease-out forwards;
         }
         @keyframes glow {
-            0% { text-shadow: 0 0 0 white; box-shadow: 0 0 0 0 #d946ef; }
-            100% { text-shadow: 0 0 20px gold; box-shadow: 0 0 30px 10px #ff66cc; }
+            0%   { box-shadow: 0 0 0 0 #d946ef; }
+            100% { box-shadow: 0 0 30px 10px #ff66cc; }
         }
-        @keyframes shake {
-            0% { transform: translate(1px,1px);}
-            100% { transform: translate(-1px,-1px);}
+
+        /* 首页积分区块 */
+        #proxyOpenBtn {
+            background: #7c3aed;
+            border: none;
+            border-radius: 60px;
+            padding: 8px 24px;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: bold;
+            transition: 0.15s;
         }
-        button {
-            cursor: pointer;
+        #proxyOpenBtn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
+
+        button { cursor: pointer; }
+
         @media (max-width: 700px) {
             .entry-grid { grid-template-columns: 1fr; }
-            .item-card { flex-direction: column; }
         }
     </style>
 </head>
 <body>
-<div class="devil-bg">👿</div>
-<div class="devil-bg devil-bg-right">😈</div>
+<div class="demon-deco">😈</div>
+<div class="demon-deco demon-deco-right">👿</div>
 <div class="app">
     <div class="header">
         <h1>瞎七八换</h1>
         <div class="sub">不靠谱交换冒险 · 把你不要的换成你没想到的</div>
     </div>
 
-    <!-- 首页（展示入口+快速盲盒） -->
+    <!-- 首页 -->
     <div id="homePage" class="page active-page">
         <div class="entry-grid">
             <div class="entry" onclick="showPage('blindboxPage')">
                 <div class="entry-icon">🎲</div>
                 <div class="entry-title">随机盲盒</div>
-                <div class="entry-desc">闭眼瞎换，输入你想丢掉的东西</div>
+                <div class="entry-desc">输入你想丢掉的东西，换一个惊喜</div>
             </div>
             <div class="entry" onclick="showPage('hallPage')">
                 <div class="entry-icon">🏛️</div>
@@ -324,68 +396,68 @@
                 <div class="entry-desc">看看别人在换什么，发起交易</div>
             </div>
         </div>
-        <div class="card">
-            <div style="margin-bottom: 12px; color:#e2b5ff;">⚡ 快速瞎换 (1秒盲盒)</div>
-            <div class="quick-blindbox">
-                <input type="text" id="quickBlindInput" placeholder="无趣的人类，你今天想交换什么来给你的一天增添涟漪？">
-                <button id="quickBlindBtn">开！</button>
-            </div>
+        <div class="card" style="text-align: center;">
+            <div style="margin-bottom: 12px; color:#e2b5ff;">💬 今日小恶魔箴言</div>
+            <div style="color:#c084fc;">"走进这里，你想典当什么？"</div>
         </div>
-        <div class="card" style="text-align:center; color:#b77cff;">
-            💡 小恶魔提示：输入越走心，越容易触发「隐藏款」暴击心灵
+        <div class="card" style="text-align: center; color:#c9b0ff;">
+            <div>🔓 盲盒代开资格：需要完成 <strong id="exchangeCountDisplay" style="color:#e9b3ff;">0</strong> 次交换（满3次解锁）</div>
+            <button id="proxyOpenBtn" style="margin-top:12px;" disabled>🔒 盲盒代开（还需3次交换）</button>
         </div>
     </div>
 
-    <!-- 交换大厅页 -->
+    <!-- 交换大厅 -->
     <div id="hallPage" class="page">
         <div class="card">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h3 style="color:#e2b5ff;">📦 大家正在瞎换什么</h3>
-                <button onclick="showPublish()" style="background:#7c3aed; border:none; border-radius:60px; padding:6px 16px; color:white;">+ 发布</button>
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap:wrap; gap:12px;">
+                <h3 style="color:#e2b5ff;">📦 交换集市</h3>
+                <button onclick="showPublish()" style="background:#7c3aed; border:none; border-radius:60px; padding:8px 20px; color:white; font-weight:bold;">+ 发布交换物</button>
             </div>
-            <div id="itemsList" style="margin-top: 20px;">加载中...</div>
+            <div id="itemsGrid" class="items-grid"></div>
         </div>
     </div>
 
     <!-- 随机盲盒页 -->
     <div id="blindboxPage" class="page">
         <div class="card">
-            <h3 style="color:#e2b5ff;">🎁 随机盲盒</h3>
-            <div style="margin: 20px 0;">
-                <input type="text" id="blindInput" placeholder="我想丢掉..." style="width:100%; padding:14px; border-radius:60px; background:#2a1b3a; border:1px solid #a855f7; color:white; outline:none; font-size:1rem;">
-                <div style="margin: 12px 0; display: flex; gap:12px; align-items:center; color:#e2b5ff;">
-                    <span>预期值 (1~10): </span>
-                    <input type="range" id="blindScoreSlider" min="1" max="10" value="5" step="1" style="flex:1;">
-                    <span id="scoreValue">5</span>
-                    <span style="font-size:0.7rem;">(可微调)</span>
-                </div>
-                <button id="openBlindBtn" style="background: linear-gradient(95deg,#7c3aed,#c026d3); width:100%; padding:12px; border-radius:60px; font-size:1.2rem; border:none; color:white; font-weight:bold;">🎲 瞎七八换</button>
+            <h3 style="color:#e2b5ff; margin-bottom:20px;">🎁 随机盲盒</h3>
+            <input type="text" id="blindInput" class="blind-input" placeholder="例如：我对老板的怨气、加班黑眼圈、前任的回忆...">
+            <div class="score-slider">
+                <span>预期值（1~10）:</span>
+                <input type="range" id="blindScoreSlider" min="1" max="10" value="5" step="1">
+                <span id="scoreValue" style="min-width:16px;">5</span>
+                <span style="font-size:0.7rem; color:#8a6eb0;">（可微调）</span>
             </div>
-            <div id="recentBlind" style="margin-top:20px; border-top:1px solid #4a2e6e; padding-top:16px;">
-                <div style="color:#b77cff; margin-bottom:8px;">最近抽取记录</div>
-                <div id="historyList"></div>
+            <button id="openBlindBtn" class="open-btn">🎲 瞎七八换</button>
+            <div class="history-list">
+                <div style="color:#b77cff; margin-bottom:8px;">📜 你的交换档案</div>
+                <div id="blindHistoryList"></div>
             </div>
         </div>
     </div>
 
-    <!-- 个人中心页（简化） -->
+    <!-- 个人中心 -->
     <div id="profilePage" class="page">
         <div class="card">
-            <h3 style="color:#e2b5ff;">😈 我的小恶魔仓库</h3>
-            <div id="profileContent" style="color:#c9b0ff; margin-top:16px;">加载中...</div>
+            <h3 style="color:#e2b5ff; margin-bottom:16px;">😈 我的小恶魔仓库</h3>
+            <div id="profileContent" style="color:#c9b0ff; line-height:2;"></div>
         </div>
     </div>
 
     <!-- 发布弹窗 -->
     <div id="publishModal" class="modal">
         <div class="modal-content">
-            <h3 style="margin-bottom: 20px; color:#e2b5ff;">发布你的交换物</h3>
-            <input type="text" id="pubTitle" placeholder="标题">
-            <textarea id="pubDesc" placeholder="描述（它是什么？为什么想换？）" rows="3"></textarea>
-            <div style="margin-bottom:12px; color:#e2b5ff; display:flex; align-items:center; gap:10px;">
-                <span>预期值: </span>
+            <h3 style="margin-bottom:16px; color:#e2b5ff;">发布你的交换物</h3>
+            <input type="text" id="pubTitle" placeholder="标题（必填）">
+            <textarea id="pubDesc" placeholder="详细描述（它是什么？为什么想换？）" rows="3" style="resize:vertical;"></textarea>
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px; color:#e2b5ff;">
+                <span>预期值:</span>
                 <input type="range" id="pubValue" min="1" max="10" value="5" style="flex:1; margin-bottom:0;">
-                <span id="pubValueShow">5</span>
+                <span id="pubValueShow" style="min-width:16px;">5</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:16px; color:#e2b5ff;">
+                <span>图标（emoji）:</span>
+                <input type="text" id="pubImg" placeholder="🎁" maxlength="10" style="width:80px; margin-bottom:0;">
             </div>
             <div>
                 <button id="confirmPublish">发布到大厅</button>
@@ -394,19 +466,20 @@
         </div>
     </div>
 
-    <!-- 交换详情/发起交换弹窗 -->
+    <!-- 交换详情弹窗 -->
     <div id="exchangeModal" class="modal">
         <div class="modal-content">
-            <h3 style="color:#e2b5ff; margin-bottom:16px;">发起交换</h3>
+            <h3 style="margin-bottom:16px; color:#e2b5ff;">发起交换</h3>
             <div id="exchangeTargetInfo" style="margin-bottom:16px; color:#c9b0ff;"></div>
-            <div style="margin: 16px 0; color:#e2b5ff; text-align:left;">
+            <div style="margin-bottom:16px; text-align:left; color:#e2b5ff;">
                 <label>用我的什么东西交换？</label>
                 <select id="myItemsSelect" style="margin-top:8px;"></select>
+                <button id="quickNewForExchange" style="margin-top:8px; background:transparent; border:1px solid #a855f7; color:#e2b5ff;">➕ 临时新建一个</button>
             </div>
             <div id="matchHint" style="font-size:0.8rem; color:#b77cff; margin-bottom:12px;"></div>
             <div>
                 <button id="confirmExchangeBtn" style="background:#c026d3;">确认交换</button>
-                <button onclick="closeExchangeModal()" style="background:transparent; border:1px solid #a855f7;">取消</button>
+                <button onclick="closeExchangeModal()" style="background:transparent; border:1px solid #a855f7; color:#e2b5ff;">取消</button>
             </div>
         </div>
     </div>
@@ -420,327 +493,413 @@
 </div>
 
 <script>
-    // ---------- 初始化数据 ----------
-    let items = [];        // 大厅发布的交换物
-    let exchanges = [];    // 成功交换记录
-    let blindHistory = []; // 盲盒抽取记录 { what, got, score, isHidden }
-    let hiddenUnlocked = false; // 是否抽到过隐藏款（用于展示收藏）
-    let exchangeCounter = 0;    // 连续盲盒次数，用于保底隐藏
+    // ─── 数据模型 ───────────────────────────────────────────────
+    let items        = [];   // 大厅物品
+    let exchanges    = [];   // 成功交换记录
+    let blindHistory = [];   // 盲盒历史
+    let userPoints   = 0;    // 交换积分
+    let hiddenUnlocked = false;
+    let consecutiveCount = 0; // 连续未出隐藏次数（保底计数）
 
-    // 内置交换物池（随机盲盒用）
+    // Fix：用单一 timer 变量避免多个 setTimeout 竞态
+    let _msgTimer = null;
+
+    // ─── 物品池 ──────────────────────────────────────────────────
     const commonPool = [
-        { name: "一只在路上的牛", score: 2, type:"普通", img:"🐮" },
-        { name: "八卦：楼下邻居的真实身份", score: 3, type:"稀有", img:"🗣️" },
-        { name: "加班摸鱼指南", score: 4, type:"稀有", img:"📖" },
-        { name: "前男友的悔过书（复印件）", score: 5, type:"史诗", img:"💔" },
-        { name: "永续黑眼圈使用权", score: 6, type:"史诗", img:"👁️" },
-        { name: "老板的脑回路U盘", score: 8, type:"传说", img:"🧠" },
-        { name: "一次假装社牛的机会", score: 7, type:"史诗", img:"🦜" },
-        { name: "无人知晓的树洞秘密", score: 5, type:"稀有", img:"🌳" }
+        { name: "一只在路上的牛",            score: 2, type:"普通", img:"🐮" },
+        { name: "八卦：楼下邻居的真实身份",   score: 3, type:"稀有", img:"🗣️" },
+        { name: "加班摸鱼指南",              score: 4, type:"稀有", img:"📖" },
+        { name: "前男友的悔过书（复印件）",   score: 5, type:"史诗", img:"💔" },
+        { name: "永续黑眼圈使用权",           score: 6, type:"史诗", img:"👁️" },
+        { name: "老板的脑回路U盘",            score: 8, type:"传说", img:"🧠" },
+        { name: "一次假装社牛的机会",          score: 7, type:"史诗", img:"🦜" },
+        { name: "无人知晓的树洞秘密",          score: 5, type:"稀有", img:"🌳" },
+        { name: "一只会骂老板的鹦鹉",          score: 6, type:"史诗", img:"🦜" },
+        { name: "30秒速成的好心情",            score: 4, type:"稀有", img:"☀️" }
     ];
-    // 隐藏款池
     const hiddenPool = [
-        { name: "一个迟到的拥抱", score: 10, type:"隐藏", img:"🤗", message:"那一刻，有人穿越时间抱住了你。" },
-        { name: "你从未收到的道歉信", score: 10, type:"隐藏", img:"💌", message:"对不起……其实他一直都知道。" },
-        { name: "母亲没说出口的骄傲", score: 10, type:"隐藏", img:"👩", message:"她常常跟邻居提起你，只是从不让你知道。" },
-        { name: "那个雨夜的自己", score: 10, type:"隐藏", img:"🌧️", message:"你原谅了从前那个笨拙的自己。" }
+        { name: "一个迟到的拥抱",      score: 10, type:"隐藏", img:"🤗", message: "那一刻，有人穿越时间抱住了你。" },
+        { name: "你从未收到的道歉信",  score: 10, type:"隐藏", img:"💌", message: "对不起……其实他一直都知道。" },
+        { name: "母亲没说出口的骄傲",  score: 10, type:"隐藏", img:"👩", message: "她常常跟邻居提起你，只是从不让你知道。" },
+        { name: "那个雨夜的自己",      score: 10, type:"隐藏", img:"🌧️", message: "你原谅了从前那个笨拙的自己。" },
+        { name: "云抱抱",              score: 10, type:"隐藏", img:"☁️", message: "有人隔着屏幕轻轻拥抱了你一下。" }
     ];
-    // 情感关键词（用于提高隐藏概率）
-    const emotionKeywords = ["后悔","失去","想念","愧疚","孤单","妈妈","父亲","奶奶","遗憾","对不起","再见","别离","痛哭","崩溃"];
+    const emotionKeywords = ["后悔","失去","想念","愧疚","孤单","妈妈","爸爸","奶奶","遗憾","对不起","再见","别离","痛哭","崩溃","难过"];
 
-    // 加载本地数据
+    // ─── 数据持久化 ───────────────────────────────────────────────
     function loadData() {
         try {
-            const stored = localStorage.getItem('xiaqibahuan_items');
-            if(stored) items = JSON.parse(stored);
-            else {
-                items = [
-                    { id: Date.now()+1, title:"加班怨气一团", desc:"连续加班两周的怨念，浓得化不开", value:4, creator:"匿名", img:"💢" },
-                    { id: Date.now()+2, title:"前任的围巾", desc:"挺暖和的，但留着尴尬", value:6, creator:"匿名", img:"🧣" },
-                    { id: Date.now()+3, title:"学会弹《小星星》的技能", desc:"可教，换一个有趣的故事", value:3, creator:"🎹" }
-                ];
-            }
-            const hist = localStorage.getItem('xiaqibahuan_blindHistory');
-            if(hist) blindHistory = JSON.parse(hist);
-            const ex = localStorage.getItem('xiaqibahuan_exchanges');
-            if(ex) exchanges = JSON.parse(ex);
-            const hiddenFlag = localStorage.getItem('xiaqibahuan_hiddenUnlocked');
-            if(hiddenFlag) hiddenUnlocked = true;
+            const si = localStorage.getItem('xiaqi_items');
+            items = si ? JSON.parse(si) : [
+                { id: Date.now()+1, title:"加班怨气一团",       desc:"连续加班两周的怨念，浓得化不开，换一个有趣的故事", value:4, img:"💢", creator:"匿名", resonate:0 },
+                { id: Date.now()+2, title:"前任的围巾",          desc:"挺暖和的，但留着尴尬，希望换一个能让我开心的东西", value:6, img:"🧣", creator:"匿名", resonate:0 },
+                { id: Date.now()+3, title:"学会弹《小星星》的技能", desc:"可教，换一个有趣的故事或技能", value:3, img:"🎹", creator:"匿名", resonate:0 }
+            ];
+            const se = localStorage.getItem('xiaqi_exchanges');
+            exchanges = se ? JSON.parse(se) : [];
+            const sb = localStorage.getItem('xiaqi_blindHistory');
+            blindHistory = sb ? JSON.parse(sb) : [];
+            const sp = localStorage.getItem('xiaqi_points');
+            userPoints = sp ? parseInt(sp) : 0;
+            hiddenUnlocked = !!localStorage.getItem('xiaqi_hidden');
         } catch(e) {
             console.warn('数据加载失败，使用默认值', e);
         }
-        renderHall();
-        renderProfile();
-        renderHistory();
+        updatePointsDisplay();
     }
 
     function saveData() {
         try {
-            localStorage.setItem('xiaqibahuan_items', JSON.stringify(items));
-            localStorage.setItem('xiaqibahuan_blindHistory', JSON.stringify(blindHistory));
-            localStorage.setItem('xiaqibahuan_exchanges', JSON.stringify(exchanges));
-            if(hiddenUnlocked) localStorage.setItem('xiaqibahuan_hiddenUnlocked', 'true');
+            localStorage.setItem('xiaqi_items',        JSON.stringify(items));
+            localStorage.setItem('xiaqi_exchanges',    JSON.stringify(exchanges));
+            localStorage.setItem('xiaqi_blindHistory', JSON.stringify(blindHistory));
+            localStorage.setItem('xiaqi_points',       userPoints);
+            if(hiddenUnlocked) localStorage.setItem('xiaqi_hidden', 'true');
         } catch(e) {
             console.warn('数据保存失败', e);
         }
     }
 
-    // 关键词打分辅助
+    function updatePointsDisplay() {
+        const span = document.getElementById('exchangeCountDisplay');
+        if(span) span.innerText = userPoints;
+        const btn = document.getElementById('proxyOpenBtn');
+        if(!btn) return;
+        if(userPoints >= 3) {
+            btn.disabled = false;
+            btn.innerText = '🎁 盲盒代开（已解锁）';
+        } else {
+            btn.disabled = true;
+            btn.innerText = `🔒 盲盒代开（还需 ${3 - userPoints} 次交换）`;
+        }
+    }
+
+    function addPoints(val) {
+        userPoints = Math.max(0, userPoints + val);
+        updatePointsDisplay();
+        saveData();
+    }
+
+    // ─── 盲盒逻辑 ────────────────────────────────────────────────
     function getScoreFromText(text, userScore) {
-        if(userScore !== null && userScore !== undefined) return Math.min(10, Math.max(1, parseInt(userScore)));
+        // userScore 为数字时直接用，否则从文本推断
+        if(typeof userScore === 'number' && !isNaN(userScore)) {
+            return Math.min(10, Math.max(1, userScore));
+        }
         let base = 5;
-        for(let kw of emotionKeywords) {
+        for(const kw of emotionKeywords) {
             if(text.includes(kw)) base = Math.min(10, base + 1);
         }
         if(text.length > 20) base = Math.min(10, base + 1);
         return base;
     }
 
-    // 随机盲盒核心
     function openBlindBox(userInput, userScore) {
-        exchangeCounter++;
+        consecutiveCount++;
         const finalScore = getScoreFromText(userInput, userScore);
-        let isHidden = false;
 
-        // 隐藏触发逻辑
+        // 隐藏款触发概率计算
         let hiddenChance = 0.05;
-        for(let kw of emotionKeywords) {
-            if(userInput.includes(kw)) hiddenChance += 0.15;
+        for(const kw of emotionKeywords) {
+            if(userInput.includes(kw)) hiddenChance += 0.12;
         }
-        if(exchangeCounter >= 4) hiddenChance = 0.8;
+        if(consecutiveCount >= 4) hiddenChance = 0.7;
         const hour = new Date().getHours();
         if(hour >= 23 || hour < 2) hiddenChance = Math.min(1, hiddenChance * 1.5);
 
-        let resultItem = null;
+        let resultItem;
+        let isHidden = false;
+
         if(Math.random() < hiddenChance && !hiddenUnlocked) {
             isHidden = true;
             hiddenUnlocked = true;
-            resultItem = { ...hiddenPool[Math.floor(Math.random() * hiddenPool.length)], isHidden: true };
+            consecutiveCount = 0;
+            resultItem = { ...hiddenPool[Math.floor(Math.random() * hiddenPool.length)] };
         } else {
+            consecutiveCount = isHidden ? 0 : consecutiveCount; // 未出隐藏继续累计
             let candidates = commonPool.filter(c => Math.abs(c.score - finalScore) <= 1);
-            if(candidates.length === 0) candidates = commonPool;
-            resultItem = { ...candidates[Math.floor(Math.random() * candidates.length)], isHidden: false };
+            if(candidates.length === 0) candidates = [...commonPool];
+            resultItem = { ...candidates[Math.floor(Math.random() * candidates.length)] };
         }
 
         const record = {
             what: userInput,
             got: resultItem.name,
-            score: finalScore,
+            score: resultItem.score,
             isHidden,
-            time: new Date().toLocaleString(),
             img: resultItem.img,
-            message: resultItem.message || ''
+            message: resultItem.message || '',
+            time: new Date().toLocaleString()
         };
         blindHistory.unshift(record);
         if(blindHistory.length > 20) blindHistory.pop();
         saveData();
-        renderHistory();
+        renderBlindHistory();
         showBlindResult(record);
-        if(isHidden || exchangeCounter >= 4) exchangeCounter = 0;
     }
 
     function showBlindResult(record) {
-        const modal = document.createElement('div');
-        modal.className = 'modal';
-        modal.innerHTML = `
+        const wrap = document.createElement('div');
+        wrap.className = 'modal';
+        wrap.innerHTML = `
             <div class="modal-content${record.isHidden ? ' hidden-glow' : ''}" style="text-align:center;">
                 <div style="font-size:80px; margin-bottom:12px;">${record.img || '🎁'}</div>
                 <h2 style="color:#e9b3ff; margin-bottom:8px;">${escapeHtml(record.got)}</h2>
-                <p style="color:#b77cff; margin-bottom:6px;">价值评分: ${record.score}</p>
-                ${record.message ? `<p style="color:#ffc0cb; margin-bottom:6px;">${escapeHtml(record.message)}</p>` : ''}
-                <p style="font-size:0.75rem; color:#8a6eb0; margin-bottom:20px;">"${escapeHtml(record.what.substring(0,30))}" 换来的</p>
+                <p style="color:#b77cff; margin-bottom:6px;">价值评分：${record.score} / 10</p>
+                ${record.message ? `<p style="color:#ffc0cb; margin:8px 0;">${escapeHtml(record.message)}</p>` : ''}
+                <p style="font-size:0.75rem; color:#8a6eb0; margin-bottom:20px;">你放弃了「${escapeHtml(record.what.substring(0, 30))}」</p>
                 <button onclick="this.closest('.modal').remove()">关闭</button>
             </div>
         `;
-        document.body.appendChild(modal);
-        // 触发过渡动画
-        requestAnimationFrame(() => modal.classList.add('show'));
+        document.body.appendChild(wrap);
+        // 使用 rAF 确保过渡动画触发
+        requestAnimationFrame(() => wrap.classList.add('show'));
+
+        if(record.isHidden) {
+            // 使用 toast 替代 alert，避免阻塞渲染
+            showToast('✨ 隐藏款暴击心灵！你获得了一份珍贵的情感礼物 ✨');
+        }
     }
 
-    function renderHistory() {
-        const container = document.getElementById('historyList');
+    // Fix：toast 替代 alert，避免阻塞 UI 渲染
+    function showToast(msg) {
+        const toast = document.createElement('div');
+        toast.style.cssText = 'position:fixed;top:24px;left:50%;transform:translateX(-50%);background:#2d1a4a;color:#e9b3ff;border:1px solid #d946ef;border-radius:40px;padding:12px 28px;z-index:300;font-size:0.9rem;text-align:center;max-width:90%;transition:opacity 0.4s;';
+        toast.innerText = msg;
+        document.body.appendChild(toast);
+        setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 400); }, 3000);
+    }
+
+    function renderBlindHistory() {
+        const container = document.getElementById('blindHistoryList');
         if(!container) return;
         if(blindHistory.length === 0) {
-            container.innerHTML = '<div style="color:#8a6eb0;">暂无盲盒记录，快去试试</div>';
+            container.innerHTML = '<div style="color:#8a6eb0; padding:8px 0;">还没有盲盒记录，快去开一个吧</div>';
             return;
         }
-        container.innerHTML = blindHistory.slice(0, 5).map(h => `
-            <div style="border-bottom:1px solid #4a2e6e; padding:8px 0; color:#c9b0ff; font-size:0.85rem;">
-                🧸 你丢了"${escapeHtml(h.what.substring(0,20))}" → 得到 ${escapeHtml(h.got)} ${h.isHidden ? '<span style="color:gold;">✨隐藏款✨</span>' : ''}
+        container.innerHTML = blindHistory.slice(0, 8).map(h => `
+            <div class="history-item">
+                🧸 你丢了「${escapeHtml(h.what.substring(0, 20))}」→ 得到 ${escapeHtml(h.got)} ${h.isHidden ? '<span style="color:gold;">✨隐藏✨</span>' : ''}
             </div>
         `).join('');
     }
 
-    // 交换大厅渲染
+    // ─── 大厅 ────────────────────────────────────────────────────
     function renderHall() {
-        const container = document.getElementById('itemsList');
-        if(!container) return;
+        const grid = document.getElementById('itemsGrid');
+        if(!grid) return;
         if(items.length === 0) {
-            container.innerHTML = '<div style="color:#8a6eb0;">空空如也，快去发布你的第一个交换物吧</div>';
+            grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; color:#8a6eb0; padding:40px 0;">暂无交换物，快去发布第一个~</div>';
             return;
         }
-        container.innerHTML = items.map(item => `
+        grid.innerHTML = items.map(item => `
             <div class="item-card">
                 <div class="item-img">${item.img || '📦'}</div>
-                <div class="item-info">
-                    <div class="item-title">${escapeHtml(item.title)}</div>
-                    <div class="item-desc">${escapeHtml(item.desc || '')}</div>
-                    <div class="item-value">预期值 ${item.value}</div>
-                    <button class="exchange-btn" data-id="${item.id}" style="margin-top:8px;">想换</button>
+                <div class="item-title">${escapeHtml(item.title)}</div>
+                <div class="item-desc" title="${escapeHtml(item.desc)}">${escapeHtml(item.desc.substring(0, 50))}${item.desc.length > 50 ? '…' : ''}</div>
+                <div class="item-footer">
+                    <span class="item-value">预期值 ${item.value}</span>
+                    <div>
+                        <button class="resonate-btn" data-id="${item.id}">❤️ ${item.resonate || 0}</button>
+                        <button class="exchange-btn" data-id="${item.id}">想换</button>
+                    </div>
                 </div>
             </div>
         `).join('');
+
+        document.querySelectorAll('.resonate-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const idx = items.findIndex(i => i.id === parseInt(btn.dataset.id));
+                if(idx !== -1) {
+                    items[idx].resonate = (items[idx].resonate || 0) + 1;
+                    saveData();
+                    renderHall();
+                }
+            });
+        });
+
         document.querySelectorAll('.exchange-btn').forEach(btn => {
             btn.addEventListener('click', () => {
-                const id = parseInt(btn.getAttribute('data-id'));
-                const targetItem = items.find(i => i.id === id);
-                if(targetItem) showExchangeModal(targetItem);
+                const target = items.find(i => i.id === parseInt(btn.dataset.id));
+                if(target) showExchangeModal(target);
             });
         });
     }
 
-    let currentTarget = null;
-
-    function showExchangeModal(target) {
-        currentTarget = target;
-        const modal = document.getElementById('exchangeModal');
-        document.getElementById('exchangeTargetInfo').innerHTML = `你想交换: <strong style="color:#e9b3ff;">${escapeHtml(target.title)}</strong>（价值 ${target.value}）`;
-        const select = document.getElementById('myItemsSelect');
-        const myItems = items.filter(i => i.creator === 'me');
-        select.innerHTML = '<option value="new">+ 临时新建交换物</option>' +
-            myItems.map(i => `<option value="${i.id}">${escapeHtml(i.title)} (价值${i.value})</option>`).join('');
-        document.getElementById('matchHint').innerHTML = '';
-        modal.classList.add('show');
-    }
-
-    function closeExchangeModal() {
-        document.getElementById('exchangeModal').classList.remove('show');
-    }
-
-    function confirmExchange() {
-        if(!currentTarget) return;
-        const selectedVal = document.getElementById('myItemsSelect').value;
-        if(selectedVal === 'new') {
-            const newItem = { id: Date.now(), title:"临时瞎换物", desc:"随便拿来换的", value:5, creator:'me', img:'🎁' };
-            items.push(newItem);
-            saveData();
-            alert('已创建临时物品，发起交换请求（演示）');
-        } else {
-            alert(`交换请求已发送给「${currentTarget.title}」的发布者（演示模式）`);
-        }
-        closeExchangeModal();
-        renderHall();
-    }
-
+    // ─── 发布 ─────────────────────────────────────────────────────
     function showPublish() {
         document.getElementById('publishModal').classList.add('show');
     }
-
     function closePublish() {
         document.getElementById('publishModal').classList.remove('show');
         document.getElementById('pubTitle').value = '';
-        document.getElementById('pubDesc').value = '';
+        document.getElementById('pubDesc').value  = '';
+        document.getElementById('pubImg').value   = '';
         document.getElementById('pubValue').value = 5;
         document.getElementById('pubValueShow').innerText = '5';
     }
 
     document.getElementById('confirmPublish').addEventListener('click', () => {
         const title = document.getElementById('pubTitle').value.trim();
-        const desc = document.getElementById('pubDesc').value.trim();
+        const desc  = document.getElementById('pubDesc').value.trim();
         const value = parseInt(document.getElementById('pubValue').value);
-        if(!title) { alert('标题不能为空'); return; }
-        items.push({ id: Date.now(), title, desc, value, creator:'me', img:'🎲' });
+        const img   = document.getElementById('pubImg').value.trim() || '🎁';
+        if(!title || !desc) { showToast('标题和描述不能为空'); return; }
+        items.push({ id: Date.now(), title, desc, value, img, creator:'me', resonate:0 });
         saveData();
         renderHall();
         closePublish();
         showPage('hallPage');
+        showToast('发布成功！去大厅看看吧 🎉');
     });
 
+    document.getElementById('pubValue').addEventListener('input', e => {
+        document.getElementById('pubValueShow').innerText = e.target.value;
+    });
+
+    // ─── 交换弹窗 ────────────────────────────────────────────────
+    let currentTarget = null;
+
+    function showExchangeModal(target) {
+        currentTarget = target;
+        document.getElementById('exchangeTargetInfo').innerHTML =
+            `你想交换：<strong style="color:#e9b3ff;">${escapeHtml(target.title)}</strong>（预期值 ${target.value}）`;
+        refreshMyItemsSelect();
+        document.getElementById('matchHint').innerHTML = '';
+        document.getElementById('exchangeModal').classList.add('show');
+    }
+
+    function refreshMyItemsSelect() {
+        const select  = document.getElementById('myItemsSelect');
+        const myItems = items.filter(i => i.creator === 'me');
+        select.innerHTML = '<option value="new">+ 临时新建交换物</option>'
+            + myItems.map(i => `<option value="${i.id}">${escapeHtml(i.title)} (价值${i.value})</option>`).join('');
+    }
+
+    function closeExchangeModal() {
+        document.getElementById('exchangeModal').classList.remove('show');
+        currentTarget = null;
+    }
+
+    function confirmExchange() {
+        if(!currentTarget) return;
+        const val = document.getElementById('myItemsSelect').value;
+        if(val === 'new') {
+            items.push({ id: Date.now(), title:"临时瞎换物", desc:"随便拿来换的，但很真诚", value:5, img:"🎲", creator:'me', resonate:0 });
+            saveData();
+            showToast('已创建临时物品，发起交换请求（演示）');
+        } else {
+            showToast(`交换请求已发送给「${currentTarget.title}」的发布者（演示模式）`);
+        }
+        addPoints(1); // 每次交换 +1 积分
+        exchanges.push({ targetId: currentTarget.id, time: new Date().toLocaleString() });
+        saveData();
+        renderHall();
+        renderProfile();
+        closeExchangeModal();
+    }
+
+    document.getElementById('confirmExchangeBtn').addEventListener('click', confirmExchange);
+
+    document.getElementById('quickNewForExchange').addEventListener('click', () => {
+        items.push({ id: Date.now(), title:"即兴交换物", desc:"临时起意，想换点有趣的", value:5, img:"🎲", creator:'me', resonate:0 });
+        saveData();
+        refreshMyItemsSelect(); // 直接刷新下拉框，不再 alert
+    });
+
+    // ─── 个人中心 ────────────────────────────────────────────────
     function renderProfile() {
         const container = document.getElementById('profileContent');
         if(!container) return;
-        const myItems = items.filter(i => i.creator === 'me');
+        const myCount = items.filter(i => i.creator === 'me').length;
         container.innerHTML = `
-            <div style="margin-bottom:8px;">📦 我的发布: ${myItems.length} 个</div>
-            <div style="margin-bottom:8px;">🎲 盲盒次数: ${blindHistory.length}</div>
-            <div style="margin-bottom:20px;">✨ 隐藏款解锁: ${hiddenUnlocked ? '<span style="color:gold;">✅ 是</span>' : '❌ 否'}</div>
-            <button onclick="clearAllData()" style="background:#7c3aed; border:none; border-radius:40px; padding:10px 24px; color:white; cursor:pointer;">重置所有数据</button>
+            <div>📦 我发布的交换物：${myCount} 个</div>
+            <div>🎲 盲盒抽取次数：${blindHistory.length}</div>
+            <div>💎 交换积分：${userPoints}（满3分可解锁盲盒代开）</div>
+            <div>✨ 隐藏款解锁：${hiddenUnlocked ? '<span style="color:gold;">✅ 是</span>' : '❌ 否'}</div>
+            <div style="margin-top:20px;">
+                <button onclick="clearAllData()" style="background:#7c3aed; border:none; border-radius:40px; padding:10px 24px; color:white;">重置所有数据</button>
+            </div>
         `;
     }
 
     function clearAllData() {
-        if(confirm('重置所有数据，清空大厅和盲盒历史？')) {
+        if(confirm('重置所有数据，清空大厅、盲盒历史和积分？')) {
             localStorage.clear();
             location.reload();
         }
     }
 
-    // 页面切换
+    // ─── 盲盒代开 ────────────────────────────────────────────────
+    function proxyOpen() {
+        if(userPoints < 3) {
+            showToast(`积分不足，还需 ${3 - userPoints} 次交换才能解锁`);
+            return;
+        }
+        if(items.length === 0) {
+            showToast('暂无交换物可代开');
+            return;
+        }
+        const randomItem = items[Math.floor(Math.random() * items.length)];
+        showToast(`代开结果：抽到了「${randomItem.title}」（价值${randomItem.value}）已加入你的仓库（演示）`);
+        addPoints(-1);
+        renderProfile();
+    }
+
+    // ─── 页面切换 ────────────────────────────────────────────────
     function showPage(pageId) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
         const target = document.getElementById(pageId);
         if(target) target.classList.add('active-page');
-        document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-        const activeNav = document.querySelector(`.nav-item[data-page="${pageId}"]`);
-        if(activeNav) activeNav.classList.add('active');
-        if(pageId === 'hallPage') renderHall();
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        const nav = document.querySelector(`.nav-item[data-page="${pageId}"]`);
+        if(nav) nav.classList.add('active');
+        if(pageId === 'hallPage')    renderHall();
         if(pageId === 'profilePage') renderProfile();
-        if(pageId === 'blindboxPage') renderHistory();
+        if(pageId === 'blindboxPage') renderBlindHistory();
     }
 
-    // 快速盲盒
-    document.getElementById('quickBlindBtn').addEventListener('click', () => {
-        const input = document.getElementById('quickBlindInput').value.trim();
-        if(!input) { alert('输入你想丢掉的东西～'); return; }
-        openBlindBox(input, null);
-        document.getElementById('quickBlindInput').value = '';
-    });
-
-    // 支持回车触发快速盲盒
-    document.getElementById('quickBlindInput').addEventListener('keydown', (e) => {
-        if(e.key === 'Enter') document.getElementById('quickBlindBtn').click();
-    });
-
-    document.getElementById('openBlindBtn').addEventListener('click', () => {
-        const input = document.getElementById('blindInput').value.trim();
-        if(!input) { alert('输入点什么'); return; }
-        const score = parseInt(document.getElementById('blindScoreSlider').value);
-        openBlindBox(input, score);
-        document.getElementById('blindInput').value = '';
-    });
-
-    document.getElementById('blindInput').addEventListener('keydown', (e) => {
-        if(e.key === 'Enter') document.getElementById('openBlindBtn').click();
-    });
-
-    document.getElementById('blindScoreSlider').addEventListener('input', (e) => {
-        document.getElementById('scoreValue').innerText = e.target.value;
-    });
-
-    document.getElementById('pubValue').addEventListener('input', (e) => {
-        document.getElementById('pubValueShow').innerText = e.target.value;
-    });
-
-    document.getElementById('confirmExchangeBtn').addEventListener('click', confirmExchange);
-
-    // 导航栏绑定
-    document.querySelectorAll('.nav-item').forEach(nav => {
-        nav.addEventListener('click', () => showPage(nav.getAttribute('data-page')));
-    });
-
+    // ─── 工具 ─────────────────────────────────────────────────────
     function escapeHtml(str) {
         if(typeof str !== 'string') return '';
         return str.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
     }
 
-    // 暴露全局（供 HTML onclick 调用）
-    window.showPage = showPage;
-    window.showPublish = showPublish;
-    window.closePublish = closePublish;
-    window.closeExchangeModal = closeExchangeModal;
-    window.clearAllData = clearAllData;
+    // ─── 事件绑定 ────────────────────────────────────────────────
+    document.getElementById('openBlindBtn').addEventListener('click', () => {
+        const input = document.getElementById('blindInput').value.trim();
+        if(!input) { showToast('输入你想丢掉的东西～'); return; }
+        const score = parseInt(document.getElementById('blindScoreSlider').value);
+        openBlindBox(input, score);
+        document.getElementById('blindInput').value = '';
+    });
 
+    document.getElementById('blindInput').addEventListener('keydown', e => {
+        if(e.key === 'Enter') document.getElementById('openBlindBtn').click();
+    });
+
+    document.getElementById('blindScoreSlider').addEventListener('input', e => {
+        document.getElementById('scoreValue').innerText = e.target.value;
+    });
+
+    document.getElementById('proxyOpenBtn').addEventListener('click', proxyOpen);
+
+    document.querySelectorAll('.nav-item').forEach(nav => {
+        nav.addEventListener('click', () => showPage(nav.getAttribute('data-page')));
+    });
+
+    // 暴露给 HTML onclick
+    window.showPage           = showPage;
+    window.showPublish        = showPublish;
+    window.closePublish       = closePublish;
+    window.closeExchangeModal = closeExchangeModal;
+    window.clearAllData       = clearAllData;
+
+    // ─── 初始化 ──────────────────────────────────────────────────
     loadData();
+    renderHall();
+    renderBlindHistory();
+    renderProfile();
 </script>
 </body>
 </html>
