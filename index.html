@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>瞎七八换 · 离谱盲盒交易所</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: radial-gradient(circle at 20% 30%, #0a0602, #000000);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', '华文楷书', 'Microsoft YaHei', 'Courier New', monospace;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1100px;
+            width: 100%;
+            background: rgba(10, 8, 5, 0.85);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(212, 175, 55, 0.5);
+            border-radius: 48px 24px 64px 24px;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 215, 140, 0.2);
+            padding: 20px 24px 32px;
+            transition: all 0.2s;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid rgba(212, 175, 55, 0.6);
+            padding-bottom: 15px;
+            position: relative;
+        }
+        .header::before {
+            content: "🎲";
+            position: absolute;
+            left: 15px;
+            top: 0;
+            font-size: 1.8rem;
+            opacity: 0.6;
+            color: #d4af37;
+        }
+        .header::after {
+            content: "🎲";
+            position: absolute;
+            right: 15px;
+            top: 0;
+            font-size: 1.8rem;
+            opacity: 0.6;
+            color: #d4af37;
+        }
+        h1 {
+            font-size: 2.6rem;
+            letter-spacing: 4px;
+            background: linear-gradient(135deg, #e4c580, #b8860b);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+            font-family: '华文楷书', 'KaiTi', serif;
+        }
+        .sub {
+            color: #cdb27a;
+            font-size: 0.85rem;
+            margin-top: 8px;
+            font-style: italic;
+            letter-spacing: 2px;
+        }
+
+        .trade-panel {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 30px 0;
+            justify-content: center;
+        }
+        .card {
+            background: rgba(16, 12, 8, 0.7);
+            backdrop-filter: blur(8px);
+            border-radius: 32px;
+            padding: 20px 16px;
+            flex: 1;
+            min-width: 240px;
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 215, 140, 0.1);
+            transition: transform 0.2s ease, border-color 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(212, 175, 55, 0.8);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.6);
+        }
+        .card-title {
+            font-size: 1.2rem;
+            color: #e8c88c;
+            text-align: center;
+            border-left: 3px solid #d4af37;
+            border-right: 3px solid #d4af37;
+            display: inline-block;
+            width: auto;
+            margin: 0 auto 15px;
+            padding: 0 12px;
+            font-weight: bold;
+            letter-spacing: 3px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 30px;
+        }
+
+        .item-display {
+            min-height: 130px;
+            background: #0a0703e0;
+            border-radius: 28px;
+            padding: 18px 12px;
+            text-align: center;
+            margin: 15px 0;
+            border: 1px solid #8b6b3d;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5), 0 2px 4px rgba(212, 175, 55, 0.2);
+            transition: all 0.2s;
+        }
+        .item-name {
+            font-size: 1.6rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #f3e5ab, #d4af37);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+            line-height: 1.3;
+        }
+        .item-rarity {
+            font-size: 0.7rem;
+            margin-top: 8px;
+            font-weight: bold;
+        }
+        .rarity-common { color: #b9b9b9; text-shadow: 0 0 2px #666; }
+        .rarity-rare { color: #6eb5ff; text-shadow: 0 0 2px #1e3a8a; }
+        .rarity-epic { color: #c67eff; text-shadow: 0 0 2px #4a1d6d; }
+        .rarity-legend { color: #ffd966; text-shadow: 0 0 4px #b87c00; }
+        .story-tag {
+            background: #3a2a1a80;
+            border-radius: 20px;
+            padding: 2px 8px;
+            font-size: 0.6rem;
+            display: inline-block;
+            margin-top: 6px;
+            color: #e8bc7e;
+            border: 1px solid #a87b3a;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+            justify-content: center;
+            margin: 25px 0 15px;
+        }
+        button {
+            background: linear-gradient(145deg, #2a2016, #1a130c);
+            border: none;
+            color: #ecd89e;
+            padding: 12px 28px;
+            font-size: 1rem;
+            border-radius: 60px;
+            cursor: pointer;
+            font-family: monospace;
+            font-weight: bold;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 215, 140, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        button::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.3), transparent);
+            transition: left 0.4s;
+        }
+        button:hover::before {
+            left: 100%;
+        }
+        button:hover {
+            background: linear-gradient(145deg, #3e2c1c, #2a1f14);
+            color: #ffefbf;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5), inset 0 1px 0 #f5d99b;
+            transform: translateY(-2px);
+        }
+        button:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 6px black;
+        }
+        .mode-active {
+            background: linear-gradient(145deg, #6b4c2c, #4f351d);
+            color: #fff0cc;
+            box-shadow: 0 0 8px #e4a84b, inset 0 1px 0 #fae6b3;
+            border: 1px solid #e4b363;
+        }
+        .mode-active:hover {
+            background: linear-gradient(145deg, #7e5a36, #5c3f21);
+        }
+
+        .tag-selector {
+            margin-top: 14px;
+            background: #0e0b07cc;
+            border-radius: 28px;
+            padding: 12px;
+            border: 1px solid #a87b3a;
+            backdrop-filter: blur(4px);
+        }
+        .tag-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+        .tag-btn {
+            background: #2b2018;
+            border: 1px solid #c99f5e;
+            color: #f3daa9;
+            font-size: 0.7rem;
+            padding: 6px 14px;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: 0.1s;
+            box-shadow: inset 0 1px 0 rgba(255,255,200,0.1);
+        }
+        .tag-btn.active {
+            background: #b87c4f;
+            color: #1f140c;
+            border-color: #ffdfaa;
+            box-shadow: 0 0 6px #ffc285;
+        }
+        .custom-tag-input {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .custom-tag-input input {
+            flex: 1;
+            background: #261e14;
+            border: 1px solid #b87c4f;
+            color: #f7e5c2;
+            padding: 8px 12px;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            outline: none;
+            transition: 0.1s;
+        }
+        .custom-tag-input input:focus {
+            border-color: #e4b363;
+            box-shadow: 0 0 5px #e4b363;
+        }
+        .custom-tag-input button {
+            padding: 6px 18px;
+            font-size: 0.7rem;
+            background: #2b2018;
+            border: 1px solid #c99f5e;
+        }
+
+        select {
+            background: #1f1810;
+            border: 1px solid #b87c4f;
+            color: #f7e5c2;
+            padding: 10px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            outline: none;
+            transition: 0.1s;
+        }
+        select:focus {
+            border-color: #e4b363;
+            box-shadow: 0 0 6px #e4b363;
+        }
+
+        .toast-msg {
+            background: #0a0602cc;
+            backdrop-filter: blur(12px);
+            color: #f7e3b2;
+            padding: 10px 20px;
+            border-radius: 60px;
+            font-size: 0.85rem;
+            text-align: center;
+            border-left: 5px solid #d4af37;
+            margin-top: 15px;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+
+        .note, .footer {
+            font-size: 0.7rem;
+            text-align: center;
+            color: #9e8a67;
+            margin-top: 18px;
+            border-top: 1px solid #4a3a28;
+            padding-top: 15px;
+        }
+        .footer {
+            margin-top: 12px;
+            font-size: 0.65rem;
+        }
+
+        @media (max-width: 650px) {
+            .container { padding: 16px; }
+            .item-name { font-size: 1.2rem; }
+            h1 { font-size: 1.8rem; }
+            button { padding: 8px 18px; font-size: 0.9rem; }
+            .card-title { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>瞎七八换</h1>
+        <div class="sub">「爱换不换，换到啥算啥」</div>
+    </div>
+
+    <!-- 模式切换 -->
+    <div style="display: flex; justify-content: center; gap: 12px; margin-bottom: 10px;">
+        <button id="modeRandomBtn" class="mode-active">🎲 随缘瞎换</button>
+        <button id="modeChooseBtn">⚡ 自选瞎换</button>
+    </div>
+
+    <!-- 交易主界面 -->
+    <div class="trade-panel">
+        <div class="card">
+            <div class="card-title">🗑️ 你 丢 进 去</div>
+            <div class="item-display" id="pawnDisplay">
+                <div class="item-name" id="pawnName">—</div>
+                <div class="item-rarity" id="pawnRarity"></div>
+                <div id="pawnStoryTag" class="story-tag"></div>
+            </div>
+            <div id="choosePawnPanel" style="display: none; text-align: center;">
+                <select id="pawnSelect">
+                    <option>加载中...</option>
+                </select>
+                <div id="storyTagPanel" class="tag-selector" style="display: none;">
+                    <div style="font-size:0.7rem; margin-bottom:6px;">🏷️ 贴个情绪标签（可选）</div>
+                    <div class="tag-buttons" id="tagButtonsContainer">
+                        <button type="button" class="tag-btn" data-tag="最破防的瞬间">💔 最破防的瞬间</button>
+                        <button type="button" class="tag-btn" data-tag="最悲伤的瞬间">😭 最悲伤的瞬间</button>
+                        <button type="button" class="tag-btn" data-tag="最后悔的瞬间">😖 最后悔的瞬间</button>
+                        <button type="button" class="tag-btn" data-tag="最尴尬的瞬间">🤡 最尴尬的瞬间</button>
+                        <button type="button" class="tag-btn" data-tag="最愤怒的瞬间">🤬 最愤怒的瞬间</button>
+                        <button type="button" class="tag-btn" data-tag="最委屈的瞬间">🥺 最委屈的瞬间</button>
+                    </div>
+                    <div class="custom-tag-input">
+                        <input type="text" id="customTagInput" placeholder="自定义标签，例如：最社死的瞬间" maxlength="20">
+                        <button id="applyCustomTag">添加</button>
+                    </div>
+                    <div style="font-size:0.6rem; color:#b8885a; margin-top:5px;">点击标签选中，再次点击取消</div>
+                </div>
+                <button id="confirmPawnBtn" style="margin-top:12px;">✨ 丢进去换</button>
+            </div>
+            <div id="randomPawnHint" style="text-align:center; font-size:0.7rem; color:#ae8f62;">🎲 当前为随缘模式，点击下方瞎换</div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">🎁 你 捞 出 来</div>
+            <div class="item-display" id="exchangeDisplay">
+                <div class="item-name" id="exchangeName">—</div>
+                <div class="item-rarity" id="exchangeRarity"></div>
+                <div id="exchangeStoryTag" class="story-tag"></div>
+            </div>
+            <div style="text-align:center; font-size:0.7rem; color:#ae8f62;">换到啥算啥 · 概不退换</div>
+        </div>
+    </div>
+
+    <div class="btn-group">
+        <button id="tradeBtn">🎲 瞎 七 八 换</button>
+        <button id="resetBtn">🔄 清空重来</button>
+    </div>
+    <div id="messageArea" class="toast-msg"></div>
+    <div class="note">
+        💡 「瞎七八换」：你可以随缘瞎换，也可以自选丢进去的东西（故事可贴标签）。每次换出来的东西都不一样。<br>
+        ✨ 包含80+离谱物品，传说稀有度触发彩蛋。
+    </div>
+    <div class="footer">
+        ⚠️ 本游戏纯属虚构，所有交易均为精神娱乐，不对现实生活产生任何影响。请轻松体验。<br>
+        🎭 瞎七八换 · 把你的破防瞬间换成别人的秘密
+    </div>
+</div>
+
+<script>
+    // ---------- 物品库（典当物）----------
+    const pawnItems = [
+        { name: "黑眼圈（永续型）", rarity: "common", isStory: false },
+        { name: "八卦雷达（烂瓜接收器）", rarity: "common", isStory: false },
+        { name: "拖延症晚期证书", rarity: "common", isStory: false },
+        { name: "周一早上的灵魂残片", rarity: "rare", isStory: false },
+        { name: "对热点的过敏原", rarity: "rare", isStory: false },
+        { name: "摸鱼技巧 Lv.3", rarity: "rare", isStory: false },
+        { name: "共情能力（磨损版）", rarity: "epic", isStory: false },
+        { name: "羞耻心（几乎全新）", rarity: "common", isStory: false },
+        { name: "前任的聊天记录（加密）", rarity: "rare", isStory: true },
+        { name: "周末的最后半小时", rarity: "epic", isStory: false },
+        { name: "熬夜冠军奖杯", rarity: "common", isStory: false },
+        { name: "第二杯半价的权利", rarity: "common", isStory: false },
+        { name: "普通且自信（典藏）", rarity: "rare", isStory: false },
+        { name: "午睡后遗症", rarity: "common", isStory: false },
+        { name: "微信免打扰模式的秘密", rarity: "rare", isStory: true },
+        { name: "发际线后退许可证", rarity: "common", isStory: false },
+        { name: "季节性emo使用权", rarity: "rare", isStory: false },
+        { name: "奶茶上瘾的契约", rarity: "common", isStory: false },
+        { name: "看到消息秒回的本能", rarity: "common", isStory: false },
+        { name: "电梯里尬聊的天赋", rarity: "common", isStory: false },
+        { name: "对香菜的热爱", rarity: "common", isStory: false },
+        { name: "拼多多砍一刀的尊严", rarity: "epic", isStory: false },
+        { name: "社交媒体点赞焦虑", rarity: "rare", isStory: false },
+        { name: "深夜哲学胡思乱想", rarity: "rare", isStory: false },
+        { name: "办健身卡后的愧疚感", rarity: "epic", isStory: false },
+        { name: "电子囤积癖（1TB）", rarity: "rare", isStory: false },
+        { name: "上班路上的红绿灯厄运", rarity: "rare", isStory: false },
+        { name: "双十一凑单强迫症", rarity: "common", isStory: false },
+        { name: "追剧被剧透的体质", rarity: "rare", isStory: false },
+        { name: "蚊子偏爱体质", rarity: "rare", isStory: false },
+        { name: "天气预报失灵的反向指标", rarity: "legend", isStory: false },
+        { name: "暗恋未遂的全过程录音", rarity: "rare", isStory: true },
+        { name: "职场背锅侠的辛酸史", rarity: "rare", isStory: true },
+        { name: "社死瞬间：在电梯里放屁被认出", rarity: "epic", isStory: true },
+        { name: "第一次被拒绝的尴尬回忆", rarity: "common", isStory: true },
+        { name: "和闺蜜绝交的内幕", rarity: "rare", isStory: true },
+        { name: "考试作弊被抓的惊魂夜", rarity: "epic", isStory: true },
+        { name: "偷看前任朋友圈的羞耻记录", rarity: "common", isStory: true },
+        { name: "租房时遇到的奇葩房东故事", rarity: "rare", isStory: true },
+        { name: "被诈骗但不敢报警的经历", rarity: "epic", isStory: true },
+        { name: "酒后吐真言的语音备忘录", rarity: "rare", isStory: true },
+        { name: "对老板的真实吐槽日记", rarity: "epic", isStory: true },
+        { name: "相亲翻车名场面", rarity: "common", isStory: true },
+        { name: "小时候偷家里钱的愧疚", rarity: "rare", isStory: true },
+        { name: "差点被发现的出轨幻想", rarity: "legend", isStory: true },
+        { name: "整容失败后的心理阴影", rarity: "epic", isStory: true },
+        { name: "被网暴的那三天记录", rarity: "legend", isStory: true },
+        { name: "捡到钱包却昧下的纠结", rarity: "rare", isStory: true },
+        { name: "对好朋友产生嫉妒的阴暗面", rarity: "epic", isStory: true },
+        { name: "深夜网抑云的真实原因", rarity: "common", isStory: true },
+        { name: "想辞职但不敢的每日呐喊", rarity: "rare", isStory: true }
+    ];
+
+    // 交换物库：能力 + 别人的秘密
+    const exchangeItems = [
+        { name: "胡说八道许可证（盖章）", rarity: "rare", isSecret: false },
+        { name: "隐形斗篷（仅对老板）", rarity: "epic", isSecret: false },
+        { name: "自动屏蔽群消息（含工作群）", rarity: "epic", isSecret: false },
+        { name: "时间感知扭曲（午休延长至2小时）", rarity: "legend", isSecret: false },
+        { name: "后悔药（限3秒内使用）", rarity: "legend", isSecret: false },
+        { name: "锦鲤附体（只用于抢红包）", rarity: "rare", isSecret: false },
+        { name: "反卷甲（反弹PPT修改意见）", rarity: "epic", isSecret: false },
+        { name: "咖啡永续（一杯顶一天）", rarity: "rare", isSecret: false },
+        { name: "秒睡眼罩（站着也能睡）", rarity: "rare", isSecret: false },
+        { name: "精准踩点（永远最后一秒打卡）", rarity: "epic", isSecret: false },
+        { name: "废话过滤（自动屏蔽开会废话）", rarity: "epic", isSecret: false },
+        { name: "社恐保护光环", rarity: "rare", isSecret: false },
+        { name: "脱单预言（但对象是AI）", rarity: "rare", isSecret: false },
+        { name: "老板的脑回路U盘", rarity: "legend", isSecret: false },
+        { name: "一张真正的空头支票", rarity: "epic", isSecret: false },
+        { name: "摸鱼能量块", rarity: "rare", isSecret: false },
+        { name: "微信已读不回合法权", rarity: "epic", isSecret: false },
+        { name: "迟到豁免卡（每月2次）", rarity: "legend", isSecret: false },
+        { name: "奶茶零热量特权", rarity: "legend", isSecret: false },
+        { name: "熬夜不掉头发buff", rarity: "legend", isSecret: false },
+        { name: "一键删除尴尬回忆", rarity: "epic", isSecret: false },
+        { name: "BUG自动修复光环", rarity: "legend", isSecret: false },
+        { name: "反催婚徽章", rarity: "epic", isSecret: false },
+        { name: "一个陌生人的羞耻秘密", rarity: "rare", isSecret: true },
+        { name: "公司高层的八卦录音片段", rarity: "epic", isSecret: true },
+        { name: "前任现任的对比档案", rarity: "rare", isSecret: true },
+        { name: "邻居半夜吵架的真实原因", rarity: "common", isSecret: true },
+        { name: "某网红的不雅聊天记录", rarity: "legend", isSecret: true },
+        { name: "你朋友背后对你的真实评价", rarity: "epic", isSecret: true },
+        { name: "暗恋对象的一篇私密日记", rarity: "legend", isSecret: true },
+        { name: "同事偷偷准备的跳槽计划", rarity: "rare", isSecret: true },
+        { name: "房东收租时的另一副面孔", rarity: "common", isSecret: true },
+        { name: "某明星的假发片秘密", rarity: "epic", isSecret: true },
+        { name: "你小学同学现在的黑历史", rarity: "rare", isSecret: true },
+        { name: "地铁上听到的奇怪对话", rarity: "common", isSecret: true },
+        { name: "外卖小哥对你的吐槽", rarity: "rare", isSecret: true },
+        { name: "前任现女友的社交小号", rarity: "epic", isSecret: true },
+        { name: "老板偷偷面试你替代者的证据", rarity: "legend", isSecret: true },
+        { name: "闺蜜瞒着你的购物金额", rarity: "common", isSecret: true },
+        { name: "某个群聊的匿名爆料", rarity: "rare", isSecret: true },
+        { name: "楼上邻居深夜噪音的真相", rarity: "rare", isSecret: true },
+        { name: "某乎高赞匿名回答的原型", rarity: "epic", isSecret: true },
+        { name: "你未来伴侣的第一次相遇场景", rarity: "legend", isSecret: true }
+    ];
+
+    // 补全数量
+    for(let i = 0; i < 5; i++) pawnItems.push({ name: `未命名的故事碎片#${i+1}`, rarity: "common", isStory: true });
+    for(let i = 0; i < 5; i++) exchangeItems.push({ name: `别人的小秘密#${i+1}`, rarity: "common", isSecret: true });
+
+    // ---------- 全局状态 ----------
+    let currentMode = "random";
+    let currentPawn = null;
+    let currentExchange = null;
+    let currentStoryTag = "";
+    let activeTagButton = null;
+
+    // Fix C4：用单一 timer 变量代替多个 setTimeout 竞争
+    let _msgTimer = null;
+
+    // ---------- 工具函数 ----------
+
+    function getRandomItem(arr) {
+        return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function rarityClass(rarity) {
+        switch(rarity) {
+            case 'common': return 'rarity-common';
+            case 'rare':   return 'rarity-rare';
+            case 'epic':   return 'rarity-epic';
+            case 'legend': return 'rarity-legend';
+            default:       return '';
+        }
+    }
+
+    function getDisplayName(pawnObj) {
+        if (pawnObj && pawnObj.tag) {
+            return `【${pawnObj.tag}】${pawnObj.name}`;
+        }
+        return pawnObj ? pawnObj.name : "—";
+    }
+
+    // Fix Minor：提取 storyTagPanel 显示/隐藏逻辑，避免重复代码
+    function updateStoryTagPanel(isStory) {
+        document.getElementById('storyTagPanel').style.display = isStory ? 'block' : 'none';
+    }
+
+    // Fix C4：showMessage 使用 clearTimeout 避免多个超时竞争覆盖
+    function showMessage(msg, isSpecial = false) {
+        const msgDiv = document.getElementById('messageArea');
+        msgDiv.innerHTML = msg;
+        msgDiv.style.background = isSpecial ? "#2a1c0ecc" : "#0a0602cc";
+        msgDiv.style.borderLeftColor = isSpecial ? "#ffcc66" : "#d4af37";
+        // 清除上一个挂起的超时，再设新的
+        if (_msgTimer) clearTimeout(_msgTimer);
+        _msgTimer = setTimeout(() => {
+            document.getElementById('messageArea').innerHTML = "⚖️ 换都换了，别后悔。";
+            _msgTimer = null;
+        }, 4000);
+    }
+
+    // ---------- 显示更新 ----------
+
+    function updateDisplay() {
+        if(currentPawn) {
+            document.getElementById('pawnName').innerHTML = getDisplayName(currentPawn);
+            const pawnRaritySpan = document.getElementById('pawnRarity');
+            pawnRaritySpan.innerHTML = `✨ ${currentPawn.rarity.toUpperCase()}`;
+            pawnRaritySpan.className = `item-rarity ${rarityClass(currentPawn.rarity)}`;
+            const pawnStoryTag = document.getElementById('pawnStoryTag');
+            if(currentPawn.isStory) {
+                pawnStoryTag.innerHTML = '📖 你的故事';
+                pawnStoryTag.style.display = 'inline-block';
+            } else {
+                pawnStoryTag.innerHTML = '';
+                pawnStoryTag.style.display = '';
+            }
+        } else {
+            document.getElementById('pawnName').innerHTML = '—';
+            document.getElementById('pawnRarity').innerHTML = '';
+            document.getElementById('pawnStoryTag').innerHTML = '';
+        }
+        if(currentExchange) {
+            document.getElementById('exchangeName').innerHTML = currentExchange.name;
+            const exchRaritySpan = document.getElementById('exchangeRarity');
+            exchRaritySpan.innerHTML = `🎁 ${currentExchange.rarity.toUpperCase()}`;
+            exchRaritySpan.className = `item-rarity ${rarityClass(currentExchange.rarity)}`;
+            const exchStoryTag = document.getElementById('exchangeStoryTag');
+            if(currentExchange.isSecret) {
+                exchStoryTag.innerHTML = '🔮 别人的秘密';
+                exchStoryTag.style.display = 'inline-block';
+            } else {
+                exchStoryTag.innerHTML = '';
+                exchStoryTag.style.display = '';
+            }
+        } else {
+            document.getElementById('exchangeName').innerHTML = '—';
+            document.getElementById('exchangeRarity').innerHTML = '';
+            document.getElementById('exchangeStoryTag').innerHTML = '';
+        }
+    }
+
+    // ---------- 交换逻辑 ----------
+
+    function getStoryExchangeMessage(pawn, exchange) {
+        const pawnDisplay = getDisplayName(pawn);
+        if(pawn.isStory && exchange.isSecret) {
+            return `📖 八卦契约生效！你丢了「${pawnDisplay}」，捞到了别人的秘密：「${exchange.name}」。灵魂交换完成。`;
+        } else if(pawn.isStory && !exchange.isSecret) {
+            return `📖 你献出了故事「${pawnDisplay}」，换回了奇葩能力：「${exchange.name}」。故事换能力，不亏。`;
+        } else if(!pawn.isStory && exchange.isSecret) {
+            return `🔍 你用「${pawn.name}」换来了一个秘密：「${exchange.name}」。当铺低语：'保守秘密也是一种诅咒。'`;
+        }
+        return null;
+    }
+
+    function randomTrade() {
+        const newPawn = getRandomItem(pawnItems);
+        let tag = "";
+        if (newPawn.isStory && Math.random() < 0.2) {
+            const randomTags = ["最破防的瞬间", "最悲伤的瞬间", "最后悔的瞬间", "最尴尬的瞬间"];
+            tag = randomTags[Math.floor(Math.random() * randomTags.length)];
+        }
+        currentPawn = { ...newPawn, tag };
+        currentExchange = { ...getRandomItem(exchangeItems) };
+        updateDisplay();
+        let msg = getStoryExchangeMessage(currentPawn, currentExchange);
+        if(!msg) msg = `🎲 瞎七八换：你丢了「${getDisplayName(currentPawn)}」，捞到了「${currentExchange.name}」`;
+        showMessage(msg);
+        checkRarityBonus();
+    }
+
+    function chooseTrade(pawnObjWithTag) {
+        if(!pawnObjWithTag) return;
+        currentPawn = pawnObjWithTag;
+        currentExchange = { ...getRandomItem(exchangeItems) };
+        updateDisplay();
+        let msg = getStoryExchangeMessage(currentPawn, currentExchange);
+        if(!msg) msg = `✋ 自选瞎换：你丢了「${getDisplayName(currentPawn)}」，捞到了「${currentExchange.name}」`;
+        showMessage(msg);
+        checkRarityBonus();
+    }
+
+    // Fix C1：合并两次 showMessage 调用，避免第二条消息覆盖第一条
+    function checkRarityBonus() {
+        const exchLegend = currentExchange && currentExchange.rarity === 'legend';
+        const pawnLegend = currentPawn && currentPawn.rarity === 'legend';
+        if (exchLegend && pawnLegend) {
+            showMessage("🔥 双传说！当铺钟声响彻三条街，连老板都站起来了。", true);
+        } else if (exchLegend) {
+            showMessage("🏆 传说级秘密！连当铺老板都多看了你一眼。", true);
+        } else if (pawnLegend) {
+            showMessage("💀 你丢掉了传说级故事，当铺的钟声响了三次。", true);
+        }
+    }
+
+    // ---------- 标签逻辑 ----------
+
+    function clearTagUI() {
+        currentStoryTag = "";
+        if(activeTagButton) {
+            activeTagButton.classList.remove('active');
+            activeTagButton = null;
+        }
+        const customInput = document.getElementById('customTagInput');
+        if(customInput) customInput.value = "";
+    }
+
+    function setTag(tagText) {
+        currentStoryTag = tagText;
+        if(currentPawn && currentPawn.isStory) {
+            currentPawn.tag = currentStoryTag;
+            updateDisplay();
+        }
+        // 同步按钮高亮状态
+        const buttons = document.querySelectorAll('.tag-btn');
+        let found = false;
+        buttons.forEach(btn => {
+            const btnTag = btn.getAttribute('data-tag');
+            if(tagText && btnTag === tagText) {
+                btn.classList.add('active');
+                activeTagButton = btn;
+                found = true;
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+        if(!found) activeTagButton = null;
+    }
+
+    function initTagSelector() {
+        const tagBtns = document.querySelectorAll('.tag-btn');
+        tagBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tag = btn.getAttribute('data-tag');
+                // 再次点击同一标签则取消
+                setTag(currentStoryTag === tag ? "" : tag);
+            });
+        });
+        document.getElementById('applyCustomTag').addEventListener('click', () => {
+            const custom = document.getElementById('customTagInput').value.trim();
+            if(custom !== "") {
+                setTag(custom);
+                document.getElementById('customTagInput').value = "";
+            }
+        });
+    }
+
+    // ---------- 选择器填充 ----------
+
+    function populateSelect() {
+        const select = document.getElementById('pawnSelect');
+        select.innerHTML = '';
+        pawnItems.forEach(item => {
+            const option = document.createElement('option');
+            option.value = item.name;
+            option.innerText = `${item.isStory ? '📖 ' : ''}${item.name} (${item.rarity})`;
+            select.appendChild(option);
+        });
+
+        select.addEventListener('change', (e) => {
+            const selectedName = e.target.value;
+            const found = pawnItems.find(p => p.name === selectedName);
+            if(found) {
+                // 切换物品时：若新物品是故事则保留已有 tag，否则清空
+                const newTag = found.isStory ? currentStoryTag : "";
+                if(!found.isStory) clearTagUI();
+                currentPawn = { ...found, tag: newTag };
+                updateStoryTagPanel(found.isStory);
+                if(found.isStory && newTag) setTag(newTag);
+                updateDisplay();
+            }
+        });
+    }
+
+    // ---------- 模式切换 ----------
+
+    function setMode(mode) {
+        currentMode = mode;
+        const randomBtn   = document.getElementById('modeRandomBtn');
+        const chooseBtn   = document.getElementById('modeChooseBtn');
+        const choosePanel = document.getElementById('choosePawnPanel');
+        const randomHint  = document.getElementById('randomPawnHint');
+
+        if(mode === 'random') {
+            randomBtn.classList.add('mode-active');
+            chooseBtn.classList.remove('mode-active');
+            choosePanel.style.display = 'none';
+            randomHint.style.display = 'block';
+            currentPawn = null;
+            currentExchange = null;
+            updateDisplay();
+        } else {
+            chooseBtn.classList.add('mode-active');
+            randomBtn.classList.remove('mode-active');
+            choosePanel.style.display = 'block';
+            randomHint.style.display = 'none';
+
+            // Fix W2：安全读取 pawnSelect，避免 null 引用
+            const select = document.getElementById('pawnSelect');
+            if(select && select.options.length) {
+                const selectedVal = select.value;
+                const selectedObj = pawnItems.find(p => p.name === selectedVal)
+                                 || pawnItems[0];
+                if(selectedObj) {
+                    // 若物品不是故事，清空 tag
+                    if(!selectedObj.isStory) {
+                        currentStoryTag = "";
+                        clearTagUI();
+                    }
+                    currentPawn = { ...selectedObj, tag: selectedObj.isStory ? currentStoryTag : "" };
+                    updateStoryTagPanel(selectedObj.isStory);
+                    updateDisplay();
+                }
+            }
+        }
+        showMessage("⚖️ 切换模式，重置瞎换。");
+    }
+
+    // ---------- 重置 ----------
+
+    // Fix C3：消除重复的 select.value 读取，逻辑统一
+    function resetDisplay() {
+        currentPawn = null;
+        currentExchange = null;
+        currentStoryTag = "";
+        clearTagUI();
+        updateDisplay();
+        document.getElementById('messageArea').innerHTML = "🕯️ 瞎七八换大厅空荡荡，等你来搞。";
+        if(_msgTimer) { clearTimeout(_msgTimer); _msgTimer = null; }
+
+        if(currentMode === 'choose') {
+            const selectEl = document.getElementById('pawnSelect');
+            if(selectEl && selectEl.options.length) {
+                // 统一使用当前选中值（或首项兜底）
+                const selectedName = selectEl.value || selectEl.options[0].value;
+                const selectedPawnObj = pawnItems.find(p => p.name === selectedName);
+                if(selectedPawnObj) {
+                    currentPawn = { ...selectedPawnObj, tag: "" };
+                    updateDisplay();
+                    // Fix W3：通过工具函数更新 storyTagPanel，不再依赖重复代码
+                    updateStoryTagPanel(selectedPawnObj.isStory);
+                }
+            }
+        }
+    }
+
+    // ---------- 执行交换 ----------
+
+    function executeTrade() {
+        if(currentMode === 'random') {
+            randomTrade();
+        } else {
+            if(!currentPawn) {
+                showMessage("先选个东西丢进去吧~");
+                return;
+            }
+            currentPawn.tag = currentPawn.isStory ? currentStoryTag : "";
+            chooseTrade(currentPawn);
+        }
+    }
+
+    // ---------- 初始化 ----------
+
+    // Fix C2：init 中去掉末尾多余的 resetDisplay()，
+    //         setMode('random') 已完成初始状态设置，无需再次覆盖
+    function init() {
+        populateSelect();
+        initTagSelector();
+
+        document.getElementById('tradeBtn').addEventListener('click', executeTrade);
+        document.getElementById('resetBtn').addEventListener('click', resetDisplay);
+        document.getElementById('modeRandomBtn').addEventListener('click', () => setMode('random'));
+        document.getElementById('modeChooseBtn').addEventListener('click', () => setMode('choose'));
+        document.getElementById('confirmPawnBtn').addEventListener('click', () => {
+            if(currentMode !== 'choose') return;
+            if(currentPawn) {
+                currentPawn.tag = currentPawn.isStory ? currentStoryTag : "";
+                chooseTrade(currentPawn);
+            } else {
+                showMessage("典当物失效，重新选一个");
+            }
+        });
+
+        // 设置初始模式（会正确初始化 currentPawn = null 并调用 updateDisplay）
+        setMode('random');
+        // 覆盖 setMode 留下的提示文字，换成更友好的欢迎语
+        document.getElementById('messageArea').innerHTML = "🕯️ 瞎七八换大厅空荡荡，等你来搞。";
+        if(_msgTimer) { clearTimeout(_msgTimer); _msgTimer = null; }
+    }
+
+    init();
+</script>
+</body>
+</html>
